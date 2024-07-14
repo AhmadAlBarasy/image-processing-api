@@ -4,8 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const fileUpload_1 = __importDefault(require("../middlewares/fileUpload"));
 const apiRouter = express_1.default.Router();
-apiRouter.route('/').get((req, res) => {
-    res.send("Test");
+apiRouter.route('/').post(fileUpload_1.default.single('photo'), (req, res) => {
+    res.send('file uploaded successfully');
 });
 exports.default = apiRouter;

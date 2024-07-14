@@ -12,4 +12,4 @@ const app = (0, express_1.default)();
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
-app.use(apiRouter_1.default);
+app.use('/api', apiRouter_1.default);
