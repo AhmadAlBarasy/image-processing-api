@@ -9,6 +9,7 @@ dotenv_1.default.config();
 const apiRouter_1 = __importDefault(require("./routes/apiRouter"));
 const PORT = process.env.PORT || 80;
 const app = (0, express_1.default)();
+app.use(express_1.default.json());
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });

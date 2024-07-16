@@ -1,10 +1,15 @@
-import express, { Request, Response, Router } from 'express';
-import upload from '../middlewares/fileUpload';
+import express, { Router } from 'express';
+import uploadFile from '../middlewares/fileUpload';
+import errorController from '../controllers/errorController';
+import { imageUploadedSuccessfully, listAllFiles, imageCropController } from '../controllers/apiController';
 
 const apiRouter: Router = express.Router();
 
-apiRouter.route('/').post(upload.single('photo'), (req: Request, res: Response) => {
-    res.send('file uploaded successfully');
-});
+apiRouter.route('/upload').post(uploadFile, imageUploadedSuccessfully);
+apiRouter.route('/crop').post(imageCropController);
+apiRouter.route('/').get(listAllFiles);
+
+
+apiRouter.use(errorController);
 
 export default apiRouter;
