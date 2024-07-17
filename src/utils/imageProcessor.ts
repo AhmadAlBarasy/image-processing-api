@@ -10,7 +10,13 @@ const validateCropDimensions = (imageWidth: number, imageHeight: number, width: 
     return true;
 };
 
-const cropImage = async (imagePath: string, userWidth: number, userHeight: number, left: number, top: number, newName: string) => {
+const validateResizeDimensions = (width: number, height: number): boolean => {
+    if (width <= 0 || width > 10000 || height <= 0 || height > 10000) //preventing invalid dimensions and setting a limit for image sizes to limit resources usage. 
+        return false;
+    return true;
+};
+
+const cropImage = async (imagePath: string, userWidth: number, userHeight: number, left: number, top: number, newName: string): Promise<void> => {
     const { width, height } = await sharp(imagePath).metadata();
     if (! width || ! height)
         throw new APIError('Error getting image metadata.', 500);
@@ -20,4 +26,21 @@ const cropImage = async (imagePath: string, userWidth: number, userHeight: numbe
     await sharp(imagePath).extract({ width: userWidth, height: userHeight, left, top }).toFile(path.join('./public', newName));
 };
 
-export { cropImage };
+const resizeImage = async (imagePath: string, width: number, height: number, newName: string, respectAspectRatio: boolean): Promise<void> => {
+    const validDimensions = validateResizeDimensions(width, height);
+    if (! validDimensions)
+        throw new APIError('Invalid resize dimensions.', 400);
+    if (respectAspectRatio){
+        await sharp(imagePath).resize({width, height, fit: sharp.fit.inside, background: { r: 255, g: 255, b: 255, alpha: 1 }}).toFile(path.join('./public', newName));
+        return;
+    }
+    await sharp(imagePath).resize({width, height, fit: sharp.fit.fill}).toFile(path.join('./public', newName));
+};
+
+const blurImage = async (imagePath: string, newName: string, sigma: number) => {
+    if (sigma < 0.3 || sigma > 100) // limit of 300 to limit resource usage.
+        throw new APIError('Invalid sigma value', 400);
+    await sharp(imagePath).blur(sigma).toFile(path.join('./public', newName));
+};
+
+export { cropImage, resizeImage, blurImage };

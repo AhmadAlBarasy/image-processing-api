@@ -5,7 +5,7 @@ import isValidFileName from '../utils/fileNameValidator';
 import { Request, Response, NextFunction } from 'express';
 
 const supportedFile: Function = (fileName: string): boolean => { // a simple function to check if the file type is supported.
-    const supportedTypes: RegExp = /\.(png|jpeg|svg)$/i;
+    const supportedTypes: RegExp = /\.(png|jpeg)$/i;
     return supportedTypes.test(fileName);
 };
 

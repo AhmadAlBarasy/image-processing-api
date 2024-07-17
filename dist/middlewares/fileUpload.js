@@ -8,7 +8,7 @@ const path_1 = __importDefault(require("path"));
 const APIError_1 = __importDefault(require("../utils/APIError"));
 const fileNameValidator_1 = __importDefault(require("../utils/fileNameValidator"));
 const supportedFile = (fileName) => {
-    const supportedTypes = /\.(png|jpeg|svg)$/i;
+    const supportedTypes = /\.(png|jpeg)$/i;
     return supportedTypes.test(fileName);
 };
 const storage = multer_1.default.diskStorage({
