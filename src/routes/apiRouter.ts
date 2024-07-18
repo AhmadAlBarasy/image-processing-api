@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import express, { Router, Request, Response, NextFunction } from 'express';
 import uploadFile from '../middlewares/fileUpload';
 import errorController from '../controllers/errorController';
 import { imageUploadedSuccessfully, 
@@ -23,6 +23,6 @@ apiRouter.route('/').get(listAllFiles);
 apiRouter.route('*').all(methodNotSupported);
 
 
-apiRouter.use(errorController);
+apiRouter.use((err: Error, req: Request, res: Response, next: NextFunction) => errorController(err, req, res, next)); // to solve a random ts problem.
 
 export default apiRouter;

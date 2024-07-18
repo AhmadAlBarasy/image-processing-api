@@ -50,7 +50,7 @@ const imageCropController = errorHandler(async (req: Request, res: Response, nex
     if (!existsSync(imagePath)) return next(new APIError('Image not found.', 404));
     await cropImage(imagePath, width, height, left, top, newName);
     res.status(200).json({
-        status: 'sucess',
+        status: 'success',
         newDimensions: {
             width,
             height
@@ -75,12 +75,12 @@ const imageResizeController = errorHandler(async (req: Request, res: Response, n
         return next(new APIError('Invalid file name.', 400));
     const imagePath: string = path.join('./public', fileName);
     if (!existsSync(imagePath)) return next(new APIError('Image not found.', 404));
-    await resizeImage(imagePath, width, height, newName, respectAspectRatio);
+    const { newWidth, newHeight } = await resizeImage(imagePath, width, height, newName, respectAspectRatio);
     res.status(200).json({
-        status: 'sucess',
+        status: 'success',
         newDimensions: {
-            width,
-            height
+            width: newWidth,
+            height: newHeight
         },
         outputImageName: `${newName}`
     });
@@ -102,13 +102,13 @@ const imageBlurController = errorHandler(async (req: Request, res: Response, nex
     if (!existsSync(imagePath)) return next(new APIError('Image not found.', 404));
     await blurImage(imagePath, newName, sigma);
     res.status(200).json({
-        status: 'sucess',
+        status: 'success',
         outputImageName: `${newName}`
     });
 });
 
 const downloadImage = errorHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const { fileName }= req.query;
+    const fileName: any= req.query.fileName;
     if (!fileName)
         return next(new APIError('Please provide a file name as a query parameter.', 400));
     if (!isValidFileName(fileName))
@@ -119,7 +119,7 @@ const downloadImage = errorHandler(async (req: Request, res: Response, next: Nex
 });
 
 const deleteImage = errorHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const { fileName }= req.query;
+    const fileName: any= req.query.fileName;
     if (!fileName)
         return next(new APIError('Please provide a file name as a query parameter.', 400));
     if (!isValidFileName(fileName))

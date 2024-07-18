@@ -32,16 +32,12 @@ const upload = multer({
 
 const uploadFile = (req: Request, res: Response, next: NextFunction): void => {
     upload.single('image')(req, res, (err) => {
-        if (!req.file){
-            next(new APIError('no file provided', 400));
-        }
-        if (err instanceof multer.MulterError) {
-            next(err);
-        } else if (err) {
-            next(err);
-        } else {
+        if (err)
+            return next(err);
+        if (!req.file)
+            return next(new APIError('no file provided', 400));
+        else
             next();
-        }
     });
 };
 

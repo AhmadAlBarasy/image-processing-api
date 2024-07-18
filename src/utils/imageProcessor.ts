@@ -26,15 +26,19 @@ const cropImage = async (imagePath: string, userWidth: number, userHeight: numbe
     await sharp(imagePath).extract({ width: userWidth, height: userHeight, left, top }).toFile(path.join('./public', newName));
 };
 
-const resizeImage = async (imagePath: string, width: number, height: number, newName: string, respectAspectRatio: boolean): Promise<void> => {
+const resizeImage = async (imagePath: string, width: number, height: number, newName: string, respectAspectRatio: boolean) => {
+    let newFilePath = path.join('./public', newName);
     const validDimensions = validateResizeDimensions(width, height);
     if (! validDimensions)
         throw new APIError('Invalid resize dimensions.', 400);
     if (respectAspectRatio){
-        await sharp(imagePath).resize({width, height, fit: sharp.fit.inside, background: { r: 255, g: 255, b: 255, alpha: 1 }}).toFile(path.join('./public', newName));
-        return;
+        await sharp(imagePath).resize({ width, height, fit: sharp.fit.inside, withoutEnlargement: false }).toFile(newFilePath);
+        const { width: newWidth, height: newHeight } = await sharp(newFilePath).metadata();
+        return { newWidth, newHeight };
     }
-    await sharp(imagePath).resize({width, height, fit: sharp.fit.fill}).toFile(path.join('./public', newName));
+    await sharp(imagePath).resize({width, height, fit: sharp.fit.fill}).toFile(newFilePath);
+    const { width: newWidth, height: newHeight } = await sharp(newFilePath).metadata();
+    return { newWidth, newHeight };
 };
 
 const blurImage = async (imagePath: string, newName: string, sigma: number) => {
