@@ -1,43 +1,45 @@
 {
-  "name": "project",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "ts:init": "tsc --init",
-    "jest:init": "npm ts-jest config:init",
-    "clear:dist": "rimraf ./dist",
-    "test": "jest --coverage",
-    "dev:concurrent": "rimraf ./dist && concurrently \"tsc -w\" \"wait-on ./dist && nodemon ./dist/server.js\"",
-    "dev": "nodemon ./src/server.ts",
-    "build": "tsc"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "@types/express": "^4.17.21",
-    "@types/jest": "^29.5.12",
-    "@types/morgan": "^1.9.9",
-    "@types/multer": "^1.4.11",
-    "@types/node": "^20.14.10",
-    "@types/supertest": "^6.0.2",
-    "concurrently": "^8.2.2",
-    "jest": "^29.7.0",
-    "morgan": "^1.10.0",
-    "nodemon": "^3.1.4",
-    "rimraf": "^6.0.1",
-    "supertest": "^7.0.0",
-    "ts-jest": "^29.2.2",
-    "typescript": "^5.5.3",
-    "wait-on": "^7.2.0"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "joi": "^17.13.3",
-    "multer": "^1.4.5-lts.1",
-    "sharp": "^0.33.4",
-    "ts-node": "^10.9.2"
-  }
+	"name": "project",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"ts:init": "tsc --init",
+		"jest:init": "npm ts-jest config:init",
+		"clear:dist": "rimraf ./dist",
+		"test": "jest --coverage",
+		"dev:concurrent": "rimraf ./dist && concurrently \"tsc -w\" \"wait-on ./dist && nodemon ./dist/server.js\"",
+		"dev": "nodemon ./src/server.ts",
+		"build": "tsc"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"devDependencies": {
+		"@types/express": "^4.17.21",
+		"@types/jest": "^29.5.12",
+		"@types/morgan": "^1.9.9",
+		"@types/multer": "^1.4.11",
+		"@types/node": "^20.14.10",
+		"@types/supertest": "^6.0.2",
+		"@typescript-eslint/parser": "^7.16.1",
+		"concurrently": "^8.2.2",
+		"jest": "^29.7.0",
+		"morgan": "^1.10.0",
+		"nodemon": "^3.1.4",
+		"prettier": "^3.3.3",
+		"rimraf": "^6.0.1",
+		"supertest": "^7.0.0",
+		"ts-jest": "^29.2.2",
+		"typescript": "^5.5.3",
+		"wait-on": "^7.2.0"
+	},
+	"dependencies": {
+		"dotenv": "^16.4.5",
+		"express": "^4.19.2",
+		"joi": "^17.13.3",
+		"multer": "^1.4.5-lts.1",
+		"sharp": "^0.33.4",
+		"ts-node": "^10.9.2"
+	}
 }
