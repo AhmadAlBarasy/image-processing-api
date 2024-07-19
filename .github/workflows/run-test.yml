@@ -13,4 +13,4 @@ jobs:
         with:
           node-version: '20'
       - run: npm i
-      - run: rpm run test
+      - run: npm run test
