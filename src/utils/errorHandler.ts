@@ -6,11 +6,3 @@ const errorHandler = (fn: Function) => (req: Request, res: Response, next: NextF
 
 
 export default errorHandler;
-
-// const errorHandler = (fn: Function) => (req: Request, res: Response, next: Function) => {
-//     try {
-//         fn(req, res, next);
-//     } catch (err) {
-//         next(err);
-//     }
-// };
