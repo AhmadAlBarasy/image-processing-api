@@ -1,9 +1,14 @@
 name: run-tests
 run-name: ${{ github.actor }} is testing the code
+
 on:
-    push:
-      branches:
-        - 'main'
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+
 jobs:
   run-api-test:
     runs-on: ubuntu-latest

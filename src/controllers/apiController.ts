@@ -5,18 +5,10 @@ import APIError from '../utils/APIError';
 import isValidFileName from '../utils/fileNameValidator';
 import { cropImage, resizeImage, blurImage } from '../utils/imageProcessor';
 import { Request, Response, NextFunction } from 'express';
-import Joi from 'joi';
-
-const methodNotSupported = (req: Request, res: Response) => {
-    res.status(405).json({
-        status: 'fail',
-        message: `${req.method} not supported for this endpoint`
-    });
-};
 
 const listAllFiles = (req: Request, res: Response) => { // lists all of the files in the "public" directory.
-    let emptyDir;
     const files = readdirSync('./public', { recursive: true });
+    let emptyDir;
     if (files.length === 0) emptyDir = 'No files found.';
     res.status(200).json({
         status: 'success',
@@ -31,18 +23,7 @@ const imageUploadedSuccessfully = (req: Request, res: Response) => { // send a r
     });
 };
 
-const imageCropController = errorHandler(async (req: Request, res: Response, next: NextFunction) => { // crops an image that exists on the server and returns a JSON response of the status.
-    const schema = Joi.object({ // create a schema that you can validate req.body using it.
-        width: Joi.number().required(),
-        height: Joi.number().required(),
-        left: Joi.number().required(),
-        top: Joi.number().required(),
-        fileName: Joi.string().required(),
-        newName: Joi.string().required()
-    });
-    const { error } =  schema.validate(req.body);
-    if (error)
-        return next(new APIError(`Missing data needed for image cropping, check API documentation for full list of requirements.`, 400));
+const imageCropController = errorHandler(async (req: Request, res: Response, next: NextFunction) => { // resizes an image that exists on the server and returns a JSON response containing the new dimensions.
     const {width, height, left, top, fileName, newName} = req.body;
     if (!isValidFileName(fileName) || !isValidFileName(newName))
         return next(new APIError('Invalid file name.', 400));
@@ -59,17 +40,7 @@ const imageCropController = errorHandler(async (req: Request, res: Response, nex
     });
 });
 
-const imageResizeController = errorHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const schema = Joi.object({ // create a schema that you can validate req.body using it.
-        width: Joi.number().required(),
-        height: Joi.number().required(),
-        fileName: Joi.string().required(),
-        newName: Joi.string().required(),
-        respectAspectRatio: Joi.boolean().required()
-    });
-    const { error } =  schema.validate(req.body);
-    if (error)
-        return next(new APIError(`Missing data needed for image resizing, check API documentation for full list of requirements.`, 400));
+const imageResizeController = errorHandler(async (req: Request, res: Response, next: NextFunction) => { // resizes an image that exists on the server and returns a JSON response containing the new dimensions.
     const {width, height, fileName, newName, respectAspectRatio} = req.body;
     if (!isValidFileName(fileName) || !isValidFileName(newName))
         return next(new APIError('Invalid file name.', 400));
@@ -86,15 +57,7 @@ const imageResizeController = errorHandler(async (req: Request, res: Response, n
     });
 });
 
-const imageBlurController = errorHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const schema = Joi.object({ // create a schema that you can validate req.body using it.
-        fileName: Joi.string().required(),
-        newName: Joi.string().required(),
-        sigma: Joi.number().required()   
-    });
-    const { error } =  schema.validate(req.body);
-    if (error)
-        return next(new APIError(`Missing data needed for image blurring, check API documentation for full list of requirements.`, 400));
+const imageBlurController = errorHandler(async (req: Request, res: Response, next: NextFunction) => { // blurs an image that exists on the server and returns a JSON response of the status.
     const {fileName, newName, sigma} = req.body;
     if (!isValidFileName(fileName) || !isValidFileName(newName))
         return next(new APIError('Invalid file name.', 400));
@@ -107,7 +70,7 @@ const imageBlurController = errorHandler(async (req: Request, res: Response, nex
     });
 });
 
-const downloadImage = errorHandler(async (req: Request, res: Response, next: NextFunction) => {
+const downloadImageController = errorHandler(async (req: Request, res: Response, next: NextFunction) => {
     const fileName: any= req.query.fileName;
     if (!fileName)
         return next(new APIError('Please provide a file name as a query parameter.', 400));
@@ -118,8 +81,8 @@ const downloadImage = errorHandler(async (req: Request, res: Response, next: Nex
     res.status(200).download(imagePath);
 });
 
-const deleteImage = errorHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const fileName: any= req.query.fileName;
+const deleteImageController = errorHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const fileName: any = req.query.fileName;
     if (!fileName)
         return next(new APIError('Please provide a file name as a query parameter.', 400));
     if (!isValidFileName(fileName))
@@ -130,12 +93,18 @@ const deleteImage = errorHandler(async (req: Request, res: Response, next: NextF
     res.status(204).json();
 });
 
+const methodNotSupported = (req: Request, res: Response) => { // sends a 405 response code that indicates that the method is not supported.
+    res.status(405).json({
+        status: 'fail',
+        message: `${req.method} not supported for this endpoint`
+    });
+};
 
 export { imageUploadedSuccessfully,
         listAllFiles,
         imageCropController,
         imageResizeController,
-        downloadImage,
-        deleteImage,
+        downloadImageController,
+        deleteImageController,
         imageBlurController,
         methodNotSupported };

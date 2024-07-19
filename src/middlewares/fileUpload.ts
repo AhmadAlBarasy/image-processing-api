@@ -1,8 +1,8 @@
-import multer from 'multer';
-import path from 'path';
 import APIError from '../utils/APIError';
 import isValidFileName from '../utils/fileNameValidator';
 import { Request, Response, NextFunction } from 'express';
+import multer from 'multer';
+import path from 'path';
 
 const supportedFile: Function = (fileName: string): boolean => { // a simple function to check if the file type is supported.
     const supportedTypes: RegExp = /\.(png|jpeg)$/i;
